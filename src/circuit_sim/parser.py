@@ -29,6 +29,7 @@ class NetlistError(ValueError):
 
 
 def remove_comment(line):
+    """Remove the comment beginning with '%' from a netlist line."""
     return line.split("%", 1)[0].strip()
 
 
@@ -37,6 +38,7 @@ def _error(line_number, message):
 
 
 def _node(token, line_number):
+    """Validate a node number; node 0 is the circuit ground."""
     if not token.isascii() or not token.isdecimal():
         _error(line_number, f"node must be a non-negative integer, got {token!r}")
     return int(token)
