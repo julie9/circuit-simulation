@@ -18,7 +18,9 @@ current source:
 
 ![Milestone 1 circuit viewer](docs/images/milestone-1-viewer.png)
 
-Matrix assembly and circuit solving are planned for Milestones 2 and 3.
+Initial dense matrix assembly for resistor, voltage-source, and current-source
+circuits is now available in `circuit_sim.mna`. Circuit solving remains planned
+for Milestone 3.
 
 ## Run
 
