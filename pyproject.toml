@@ -7,7 +7,7 @@ name = "circuit-sim"
 version = "0.1.0"
 description = "A small educational circuit simulator based on Najm's Circuit Simulation"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["numpy>=2.0"]
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
