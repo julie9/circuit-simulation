@@ -4,6 +4,22 @@ An incremental Python 3.12+ learning project based on Farid N. Najm's
 *Circuit Simulation*. The first milestone reads a restricted netlist and
 displays it as a read-only Tkinter schematic. It does not solve circuits yet.
 
+## Current State
+
+Milestone 1 is complete. The project currently:
+
+- parses the restricted Chapter 1 netlist language;
+- preserves node order, source polarity, and current direction;
+- validates records with line-numbered errors; and
+- displays the parsed circuit in a deterministic, read-only Tkinter viewer.
+
+The current viewer displays the example voltage source, resistor network, and
+current source:
+
+![Milestone 1 circuit viewer](docs/images/milestone-1-viewer.png)
+
+Matrix assembly and circuit solving are planned for Milestones 2 and 3.
+
 ## Run
 
 From the repository root:
