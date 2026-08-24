@@ -32,12 +32,12 @@ The first release must:
 
 ## Supporting documents
 
-- [Book overview](../docs/book-overview.md): chapter summaries and the overall simulation flow.
-- [Learning and coding workflow](../docs/learning-workflow.md): session format, Python style, and numerical policy.
-- [Parser and viewer specification](../docs/parser-viewer-spec.md): Chapter 1 grammar, conventions, and viewer requirements.
-- [Implementation roadmap](../docs/implementation-roadmap.md): chapter targets, milestones, and next sessions.
-- [Milestone status](../docs/milestone_status.md): current implementation state.
-- [AI work log](../docs/prompts/README.md): prompts, results, and decisions from AI-assisted sessions.
+- [Book overview](book-overview.md): chapter summaries and the overall simulation flow.
+- [Learning and coding workflow](learning-workflow.md): session format, Python style, and numerical policy.
+- [Parser and viewer specification](parser-viewer-spec.md): Chapter 1 grammar, conventions, and viewer requirements.
+- [Implementation roadmap](implementation-roadmap.md): chapter targets, milestones, and next sessions.
+- [Milestone status](milestone_status.md): current implementation state.
+- [AI work log](ai-work-log/README.md): prompts, results, and decisions from AI-assisted sessions.
 
 ## Repository structure
 
@@ -47,11 +47,11 @@ Keep the structure small initially. Add directories for `mna`, `linalg`, `nonlin
 circuit-simulation/
 ├── pyproject.toml
 ├── README.md
-├── design-doc/
-│   └── project specification.md
 ├── src/
 │   └── circuit_sim/
 ├── tests/
 ├── examples/
 └── docs/
+    ├── project-specification.md
+    └── ai-work-log/
 ```
