@@ -120,15 +120,19 @@ case, an independent reference comparison where appropriate, and a stated
 tolerance. For `A @ x = b`, calculate `r = b - A @ x` and consider scaling,
 conditioning, singularity, and small pivots.
 
-## Next solver milestone
+## Milestone 3: Educational dense linear solver
 
-Milestone 3 is the educational dense linear solver:
+Milestone 3 is complete. The solver uses dense `np.float64` arrays and
+returns the solution, residual vector, residual norm, and LU factors. The
+factorization uses partial pivoting and reports singular or unusable pivots
+through `np.linalg.LinAlgError`. The educational implementation is compared
+against `np.linalg.solve` as an independent reference.
 
-- [ ] Define the solver interface and numerical conventions.
-- [ ] Implement forward and backward substitution.
-- [ ] Implement dense LU factorization with partial pivoting.
-- [ ] Detect singular or unusable pivots.
-- [ ] Report residuals and compare against independent reference results.
+- [x] Define the solver interface and numerical conventions.
+- [x] Implement forward and backward substitution.
+- [x] Implement dense LU factorization with partial pivoting.
+- [x] Detect singular or unusable pivots.
+- [x] Report residuals and compare against independent reference results.
 
 ## Project boundaries
 
