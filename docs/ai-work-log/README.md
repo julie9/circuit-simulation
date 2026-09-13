@@ -54,7 +54,9 @@ The solver returns `solution`, `residual`, `residual_norm`, `lower`, `upper`,
 and `permutation`. The factorization convention is `P @ A = L @ U`, where the
 returned permutation indexes rows of `A`. A hand-solved expected value initially
 omitted the current-source contribution; the focused test caught and corrected
-that arithmetic error. The next work is nonlinear DC analysis.
+that arithmetic error. Added `docs/solver-guide.md` with the Chapter 3
+derivation, algorithm sketch, numerical risks, and comprehension check. The
+next work is nonlinear DC analysis.
 
 ---
 
