@@ -3,7 +3,7 @@
 import numpy as np
 
 
-_SUPPORTED_TYPES = {"R", "V", "I"}
+_SUPPORTED_TYPES = {"R", "V", "I", "C", "L"}
 
 
 def _stamp_conductance(matrix, node_indices, positive_node, negative_node, conductance):
@@ -29,7 +29,7 @@ def _stamp_current(rhs, node_indices, positive_node, negative_node, current):
         rhs[negative_index] += current
 
 
-def _stamp_voltage_source(matrix, rhs, node_indices, branch_index, positive_node, negative_node, voltage):
+def _stamp_branch_constraint(matrix, rhs, node_indices, branch_index, positive_node, negative_node, voltage):
     positive_index = node_indices.get(positive_node)
     negative_index = node_indices.get(negative_node)
     if positive_index is not None:
@@ -38,16 +38,15 @@ def _stamp_voltage_source(matrix, rhs, node_indices, branch_index, positive_node
     if negative_index is not None:
         matrix[negative_index, branch_index] -= 1.0
         matrix[branch_index, negative_index] -= 1.0
-    # The current through the voltage source is an unknown, so we add the voltage 
-    # to the right-hand side vector.
-    rhs[branch_index] += voltage 
+    rhs[branch_index] += voltage
 
 
 def assemble_mna(circuit):
-    """Assemble ``A @ x = b`` for resistor, voltage-source, and current-source records.
+    """Assemble ``A @ x = b`` for static linear circuit records.
 
     Node voltages are indexed by ascending non-ground node number.  Additional
-    unknowns are currents through voltage sources in circuit order.
+    unknowns are currents through voltage sources and inductors in circuit order.
+    Capacitors are open circuits in this static/DC formulation.
     """
     unsupported = [element["type"] for element in circuit if element["type"] not in _SUPPORTED_TYPES]
     if unsupported:
@@ -60,14 +59,14 @@ def assemble_mna(circuit):
         for node in (element["positive_node"], element["negative_node"])
         if node != 0
     })
-    voltage_sources = [element for element in circuit if element["type"] == "V"]
+    branch_elements = [element for element in circuit if element["type"] in {"V", "L"}]
     node_indices = {node: index for index, node in enumerate(nodes)}
     branch_indices = {
         element["name"]: len(nodes) + index
-        for index, element in enumerate(voltage_sources)
+        for index, element in enumerate(branch_elements)
     }
     unknowns = [f"V({node})" for node in nodes]
-    unknowns.extend(f"I({element['name']})" for element in voltage_sources)
+    unknowns.extend(f"I({element['name']})" for element in branch_elements)
 
     size = len(unknowns) # Total number of unknowns (node voltages + voltage source currents)
     matrix = np.zeros((size, size), dtype=np.float64) # Coefficient matrix
@@ -91,20 +90,23 @@ def assemble_mna(circuit):
                 node_indices, positive_node, negative_node, 
                 element["current"] # Current value
             )
-        else:
+        elif element["type"] in {"V", "L"}:
             if positive_node == negative_node:
                 raise ValueError(
-                    f"voltage source {element['name']} must connect two distinct nodes"
+                    f"{element['type']} element {element['name']} must connect two distinct nodes"
                 )
-            _stamp_voltage_source(
+            _stamp_branch_constraint(
                 matrix, # Coefficient matrix
                 rhs, # Right-hand side vector
                 node_indices,
                 branch_indices[element["name"]], # Index of the voltage source
                 positive_node,
                 negative_node,
-                element["voltage"],
+                element.get("voltage", 0.0),
             )
+        elif element["type"] == "C":
+            # Capacitors have no DC conductance or branch constraint.
+            continue
 
     return {
         "matrix": matrix,
