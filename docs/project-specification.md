@@ -37,6 +37,7 @@ The first release must:
 - [Parser and viewer specification](parser-viewer-spec.md): Chapter 1 grammar, conventions, and viewer requirements.
 - [Implementation roadmap](implementation-roadmap.md): chapter targets, milestones, and next sessions.
 - [Milestone status](milestone_status.md): current implementation state.
+- [Current tasks](current_tasks.md): active implementation checklist.
 - [AI work log](ai-work-log/README.md): prompts, results, and decisions from AI-assisted sessions.
 
 ## Repository structure
