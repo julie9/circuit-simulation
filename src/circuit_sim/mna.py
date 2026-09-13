@@ -86,6 +86,10 @@ def assemble_mna(circuit):
         elif element["type"] == "I":
             _stamp_current(rhs, node_indices, positive_node, negative_node, element["current"])
         else:
+            if positive_node == negative_node:
+                raise ValueError(
+                    f"voltage source {element['name']} must connect two distinct nodes"
+                )
             _stamp_voltage_source(
                 matrix,
                 rhs,
