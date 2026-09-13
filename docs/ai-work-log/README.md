@@ -29,6 +29,33 @@ Important decisions, tests, lessons, or follow-up work.
 
 ---
 
+## 2026-09-13: Start Milestone 4 nonlinear DC analysis
+
+- **AI Model**: GitHub Copilot.
+
+**Prompt**
+
+Ensure Milestone 3 has sufficient pedagogical content, then create a new branch
+on top and plan and continue with Milestone 4.
+
+**Result**
+
+Added `docs/solver-guide.md` with Chapter 3 purpose, notation, worked pivoting
+example, LU pseudocode, numerical risks, API contract, and comprehension check.
+Created `feature/nonlinear-dc-analysis` from the updated Milestone 3 tip.
+Implemented the first Chapter 4 slice: a Shockley diode model, Newton
+companion stamps, physical nonlinear residuals, residual-decreasing backtracking
+damping, convergence limits, and package export through `solve_dc`.
+
+**Notes**
+
+This is an in-progress Milestone 4 increment. Diode defaults are
+$I_S=10^{-14}$ A and $V_T=0.02585$ V; BJT/MOS models, source stepping, and
+continuation remain deferred. Focused DC tests pass, including a hand-solvable
+resistor/voltage-source/diode operating point and a nonconvergence limit.
+
+---
+
 ## 2026-09-13: Implement Milestone 3 dense linear solver
 
 - **AI Model**: GitHub Copilot.

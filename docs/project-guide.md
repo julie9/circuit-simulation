@@ -50,12 +50,16 @@ formulation, capacitors are open circuits and inductors are ideal zero-voltage
 branches with current unknowns. Meters remain display-only and semiconductor
 records are unsupported. The system is assembled but not solved.
 
+Milestone 3, the educational dense linear solver, is complete. It implements
+substitution, partial-pivot LU, singular-pivot detection, and residual
+reporting. Milestone 4 has started with a diode-only nonlinear DC operating
+point solver using Shockley companion models and damped Newton iteration.
+
 ### Next actions
 
-- Define the educational dense solver interface and numerical conventions.
-- Implement forward and backward substitution.
-- Implement dense LU factorization with partial pivoting and diagnostics.
-- Compare solver results against independent references.
+- Add BJT and MOS device equations and Jacobians.
+- Add nonlinear source stepping and broader convergence diagnostics.
+- Complete the full nonlinear DC operating-point milestone.
 
 ### Milestone 2 checklist
 
@@ -77,9 +81,11 @@ records are unsupported. The system is assembled but not solved.
 2. **Linear MNA assembly:** add retained linear-element stamps and verify
   dense `A x = b` systems against hand-assembled references. Complete.
 3. **Linear solver:** implement substitution, dense LU with partial pivoting,
-   singularity detection, residual reporting, and independent comparisons.
+  singularity detection, residual reporting, and independent comparisons.
+  Complete.
 4. **Nonlinear DC analysis:** add device models, Jacobians, Newton iteration,
-   convergence tests, and robustness techniques such as damping or stepping.
+  convergence tests, and robustness techniques such as damping or stepping.
+  In progress: diode model and damped Newton iteration complete.
 5. **Transient analysis:** add capacitor and inductor histories, companion
    models, DC initialization, nested iteration, time-step control, and
    waveform output.
@@ -161,6 +167,8 @@ Keep production simulator code under `src/` and tests under `tests/`.
   electrical conventions, and drawing requirements.
 - [Dense solver guide](solver-guide.md): Chapter 3 concepts, derivation,
   algorithm, numerical risks, and comprehension check.
+- [DC solver guide](dc-solver-guide.md): Chapter 4 diode model,
+  linearization, iteration, risks, and comprehension check.
 - [Commit workflow](commit-workflow.md): commit, branch, and pull-request
   conventions.
 - [AI work log](ai-work-log/README.md): historical prompts, decisions, and
