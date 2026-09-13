@@ -38,7 +38,9 @@ def _stamp_voltage_source(matrix, rhs, node_indices, branch_index, positive_node
     if negative_index is not None:
         matrix[negative_index, branch_index] -= 1.0
         matrix[branch_index, negative_index] -= 1.0
-    rhs[branch_index] += voltage
+    # The current through the voltage source is an unknown, so we add the voltage 
+    # to the right-hand side vector.
+    rhs[branch_index] += voltage 
 
 
 def assemble_mna(circuit):
@@ -67,9 +69,9 @@ def assemble_mna(circuit):
     unknowns = [f"V({node})" for node in nodes]
     unknowns.extend(f"I({element['name']})" for element in voltage_sources)
 
-    size = len(unknowns)
-    matrix = np.zeros((size, size), dtype=np.float64)
-    rhs = np.zeros(size, dtype=np.float64)
+    size = len(unknowns) # Total number of unknowns (node voltages + voltage source currents)
+    matrix = np.zeros((size, size), dtype=np.float64) # Coefficient matrix
+    rhs = np.zeros(size, dtype=np.float64) # Right-hand side vector
     for element in circuit:
         positive_node = element["positive_node"]
         negative_node = element["negative_node"]
@@ -77,24 +79,28 @@ def assemble_mna(circuit):
             if element["resistance"] == 0:
                 raise ValueError(f"resistor {element['name']} must have non-zero resistance")
             _stamp_conductance(
-                matrix,
+                matrix, # Coefficient matrix
                 node_indices,
                 positive_node,
                 negative_node,
-                1.0 / element["resistance"],
+                1.0 / element["resistance"], # Conductance is 1 / resistance
             )
         elif element["type"] == "I":
-            _stamp_current(rhs, node_indices, positive_node, negative_node, element["current"])
+            _stamp_current(
+                rhs, # Right-hand side vector
+                node_indices, positive_node, negative_node, 
+                element["current"] # Current value
+            )
         else:
             if positive_node == negative_node:
                 raise ValueError(
                     f"voltage source {element['name']} must connect two distinct nodes"
                 )
             _stamp_voltage_source(
-                matrix,
-                rhs,
+                matrix, # Coefficient matrix
+                rhs, # Right-hand side vector
                 node_indices,
-                branch_indices[element["name"]],
+                branch_indices[element["name"]], # Index of the voltage source
                 positive_node,
                 negative_node,
                 element["voltage"],
