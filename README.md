@@ -18,9 +18,10 @@ current source:
 
 ![Milestone 1 circuit viewer](docs/images/milestone-1-viewer.png)
 
-Initial dense matrix assembly for resistor, voltage-source, and current-source
-circuits is now available in `circuit_sim.mna`. Circuit solving remains planned
-for Milestone 3.
+Verified dense static MNA assembly for resistor, voltage-source, current-source,
+capacitor, and inductor circuits is now available in `circuit_sim.mna`.
+Capacitors are open circuits and inductors are ideal zero-voltage branches in
+this formulation. Circuit solving remains planned for Milestone 3.
 
 ## Run
 

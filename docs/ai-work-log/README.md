@@ -29,6 +29,39 @@ Important decisions, tests, lessons, or follow-up work.
 
 ---
 
+## 2026-09-13: Complete Milestone 2 linear MNA assembly
+
+- **AI Model**: GitHub Copilot.
+
+**Prompt**
+
+Check whether Milestone 2 is complete, implement the remaining work in logical
+increments, commit the changes, and keep a trace in the AI work log.
+
+**Result**
+
+Extended dense static MNA assembly to support capacitors and inductors. A
+capacitor contributes no DC stamp. An inductor contributes an ideal
+zero-voltage branch constraint and a branch-current unknown. Branch-current
+indices now include voltage sources and inductors in circuit order. Added exact
+matrix tests for capacitor behavior, grounded inductors, mixed branch ordering,
+unsupported meters and semiconductor records, and a complete hand-assembled
+linear fixture.
+
+Milestone 2 documentation now records the retained-element conventions and is
+marked complete. VM and AM remain display-only records and are rejected by MNA
+assembly, preserving the parser/viewer contract.
+
+**Notes**
+
+The implementation commit is `64e5aac`, `Implement linear MNA assembly`.
+Focused validation passed with 10 tests. NumPy and pytest were installed in the
+workspace `.venv` because the initially selected interpreter lacked NumPy.
+The next milestone is the educational dense linear solver; transient capacitor
+and inductor companion models remain deferred.
+
+---
+
 ## 2026-08-23: Start implementation 
 
 - **AI Model**: GitHub Copilot Chat, Auto (only choice on Student package). **Selected Model**: GPT5.6-Luna.

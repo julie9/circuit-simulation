@@ -43,19 +43,19 @@ parses the restricted netlist language, validates records with line-numbered
 errors, preserves terminal and source conventions, and draws a deterministic,
 read-only Tkinter schematic.
 
-Milestone 2, linear MNA assembly, is in progress. Deterministic node and
-voltage-source indexing and dense `np.float64` assembly are implemented for
-resistors, voltage sources, and current sources. Capacitors, inductors,
-meters, and semiconductor records do not have MNA stamps yet. The system is
-assembled but not solved.
+Milestone 2, linear MNA assembly, is complete. Deterministic node and branch
+indexing and dense `np.float64` assembly are implemented for resistors, voltage
+sources, current sources, capacitors, and inductors. In the static/DC
+formulation, capacitors are open circuits and inductors are ideal zero-voltage
+branches with current unknowns. Meters remain display-only and semiconductor
+records are unsupported. The system is assembled but not solved.
 
 ### Next actions
 
-- Add stamps and tests for the retained linear element groups.
-- Decide whether meter records contribute to MNA and define their unknowns.
-- Add hand-assembled matrix comparisons for additional small circuits.
-- Verify the complete small-circuit assembly target, then begin the dense
-  educational solver.
+- Define the educational dense solver interface and numerical conventions.
+- Implement forward and backward substitution.
+- Implement dense LU factorization with partial pivoting and diagnostics.
+- Compare solver results against independent references.
 
 ### Milestone 2 checklist
 
@@ -64,18 +64,18 @@ assembled but not solved.
 - [x] Stamp resistors, voltage sources, and current sources.
 - [x] Test matrix values, source direction, sign conventions, and grounded terminals.
 - [x] Reject unsupported element types explicitly.
-- [ ] Add stamps for retained linear element groups.
-- [ ] Decide whether meters contribute to MNA and define their unknowns.
-- [ ] Add capacitor and inductor MNA tests when their stamps exist.
-- [ ] Add more hand-assembled matrix comparisons.
-- [ ] Verify the complete small-circuit assembly target.
+- [x] Add stamps for retained linear element groups.
+- [x] Decide whether meters contribute to MNA and define their unknowns.
+- [x] Add capacitor and inductor MNA tests when their stamps exist.
+- [x] Add more hand-assembled matrix comparisons.
+- [x] Verify the complete small-circuit assembly target.
 
 ## Roadmap
 
 1. **Netlist parser and viewer:** parse and display a recognizable small
    circuit. Complete.
 2. **Linear MNA assembly:** add retained linear-element stamps and verify
-   dense `A x = b` systems against hand-assembled references. In progress.
+  dense `A x = b` systems against hand-assembled references. Complete.
 3. **Linear solver:** implement substitution, dense LU with partial pivoting,
    singularity detection, residual reporting, and independent comparisons.
 4. **Nonlinear DC analysis:** add device models, Jacobians, Newton iteration,
