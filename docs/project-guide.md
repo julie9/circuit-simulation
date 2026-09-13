@@ -159,6 +159,8 @@ Keep production simulator code under `src/` and tests under `tests/`.
 
 - [Parser and viewer specification](parser-viewer-spec.md): grammar,
   electrical conventions, and drawing requirements.
+- [Dense solver guide](solver-guide.md): Chapter 3 concepts, derivation,
+  algorithm, numerical risks, and comprehension check.
 - [Commit workflow](commit-workflow.md): commit, branch, and pull-request
   conventions.
 - [AI work log](ai-work-log/README.md): historical prompts, decisions, and
