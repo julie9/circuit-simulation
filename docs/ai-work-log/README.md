@@ -29,6 +29,35 @@ Important decisions, tests, lessons, or follow-up work.
 
 ---
 
+## 2026-09-13: Implement Milestone 3 dense linear solver
+
+- **AI Model**: GitHub Copilot.
+
+**Prompt**
+
+Create a new git branch on top of the completed Milestone 2 and continue with
+Milestone 3, preserving logical commits and an AI work-log trace.
+
+**Result**
+
+Created `feature/dense-linear-solver` from the Milestone 2 tip. Added an
+educational dense solver with forward substitution, backward substitution,
+partial-pivot LU factorization, singular-pivot detection, finite-value and
+shape validation, and residual reporting. Exported `solve_linear_system` from
+the package API. Tests cover a hand-assembled MNA system, LU reconstruction,
+row pivoting, singular matrices, invalid inputs, residuals, and comparison with
+`np.linalg.solve`.
+
+**Notes**
+
+The solver returns `solution`, `residual`, `residual_norm`, `lower`, `upper`,
+and `permutation`. The factorization convention is `P @ A = L @ U`, where the
+returned permutation indexes rows of `A`. A hand-solved expected value initially
+omitted the current-source contribution; the focused test caught and corrected
+that arithmetic error. The next work is nonlinear DC analysis.
+
+---
+
 ## 2026-09-13: Complete Milestone 2 linear MNA assembly
 
 - **AI Model**: GitHub Copilot.
