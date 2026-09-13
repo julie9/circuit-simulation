@@ -33,8 +33,9 @@ python -m circuit_sim.viewer examples/first_circuit.net
 ```
 
 The parser is independent of Tkinter and returns plain dictionaries that
-preserve terminal order and source direction. See `docs/project-specification.md`
-for the learning sequence, `docs/milestone_status.md` for current scope,
-`docs/current_tasks.md` for the active checklist, and
+preserve terminal order and source direction. See
+[`docs/project-guide.md`](docs/project-guide.md) for project scope, status,
+and roadmap; [`docs/parser-viewer-spec.md`](docs/parser-viewer-spec.md) for
+the input and drawing contract; and
 [`docs/commit-workflow.md`](docs/commit-workflow.md) for repeatable phase
 commits and commit-message conventions.
