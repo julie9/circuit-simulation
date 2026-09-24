@@ -18,7 +18,10 @@ current source:
 
 ![Milestone 1 circuit viewer](docs/images/milestone-1-viewer.png)
 
-Matrix assembly and circuit solving are planned for Milestones 2 and 3.
+Verified dense static MNA assembly for resistor, voltage-source, current-source,
+capacitor, and inductor circuits is now available in `circuit_sim.mna`.
+Capacitors are open circuits and inductors are ideal zero-voltage branches in
+this formulation. Circuit solving remains planned for Milestone 3.
 
 ## Run
 
@@ -31,7 +34,9 @@ python -m circuit_sim.viewer examples/first_circuit.net
 ```
 
 The parser is independent of Tkinter and returns plain dictionaries that
-preserve terminal order and source direction. See `docs/project-specification.md`
-for the learning sequence, `docs/milestone_status.md` for current scope, and
+preserve terminal order and source direction. See
+[`docs/project-guide.md`](docs/project-guide.md) for project scope, status,
+and roadmap; [`docs/parser-viewer-spec.md`](docs/parser-viewer-spec.md) for
+the input and drawing contract; and
 [`docs/commit-workflow.md`](docs/commit-workflow.md) for repeatable phase
 commits and commit-message conventions.
