@@ -38,9 +38,9 @@ netlist -> parser -> circuit records -> unknown indexing -> MNA assembly
 
 ## Current status
 
-Milestone 1, netlist parser and viewer, is complete. The project currently
-parses the restricted netlist language, validates records with line-numbered
-errors, preserves terminal and source conventions, and draws a deterministic,
+Milestone 1, netlist parser and viewer, is complete. The project parses the
+restricted netlist language, validates records with line-numbered errors,
+preserves terminal and source conventions, and draws a deterministic,
 read-only Tkinter schematic.
 
 Milestone 2, linear MNA assembly, is complete. Deterministic node and branch
@@ -48,18 +48,21 @@ indexing and dense `np.float64` assembly are implemented for resistors, voltage
 sources, current sources, capacitors, and inductors. In the static/DC
 formulation, capacitors are open circuits and inductors are ideal zero-voltage
 branches with current unknowns. Meters remain display-only and semiconductor
-records are unsupported. The system is assembled but not solved.
+records are unsupported by linear MNA. The assembled system is consumed by the
+linear solver, while diode circuits use the nonlinear DC solver.
 
 Milestone 3, the educational dense linear solver, is complete. It implements
 substitution, partial-pivot LU, singular-pivot detection, and residual
-reporting. Milestone 4 has started with a diode-only nonlinear DC operating
-point solver using Shockley companion models and damped Newton iteration.
+reporting. Milestone 4's diode increment is complete: it uses Shockley
+companion models and damped Newton iteration. The read-only viewer now connects
+the parser and DC solver, reports convergence diagnostics, and plots node
+voltages when analysis elements are supported.
 
 ### Next actions
 
 - Add BJT and MOS device equations and Jacobians.
 - Add nonlinear source stepping and broader convergence diagnostics.
-- Complete the full nonlinear DC operating-point milestone.
+- Complete the broader nonlinear DC operating-point milestone.
 
 ### Milestone 2 checklist
 
@@ -85,7 +88,8 @@ point solver using Shockley companion models and damped Newton iteration.
   Complete.
 4. **Nonlinear DC analysis:** add device models, Jacobians, Newton iteration,
   convergence tests, and robustness techniques such as damping or stepping.
-  In progress: diode model and damped Newton iteration complete.
+  Diode model, damped Newton iteration, and the read-only result viewer are
+  complete for this increment; BJT/MOS support remains future work.
 5. **Transient analysis:** add capacitor and inductor histories, companion
    models, DC initialization, nested iteration, time-step control, and
    waveform output.
@@ -150,14 +154,15 @@ one useful. Introduce dataclasses only when dictionary keys become difficult
 to maintain, and explain and test that migration.
 
 Use Jupyter notebooks only for derivations, experiments, and visualizations.
-The viewer is read-only and targets small circuits; editing, arbitrary
-automatic routing, hierarchical circuits, waveform plotting, and simulation
-controls are deferred.
+The viewer is read-only and targets small circuits. It displays the parsed
+graph and, for DC-supported circuits, a node-voltage plot. Editing, arbitrary
+automatic routing, hierarchical circuits, transient waveform plotting, and
+simulation controls are deferred.
 
-The first release reads a small netlist, rejects malformed lines clearly,
-returns simple element dictionaries, displays an R-V-I schematic, preserves
-terminal and source conventions, passes parser tests, and keeps parser, GUI,
-and circuit-data responsibilities separate. It does not solve circuits.
+The current release target reads a small netlist, rejects malformed lines
+clearly, returns simple element dictionaries, displays a schematic, preserves
+terminal and source conventions, solves supported DC circuits, reports
+residuals, and keeps parser, GUI, and circuit-data responsibilities separate.
 
 Keep production simulator code under `src/` and tests under `tests/`.
 

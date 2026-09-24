@@ -1,8 +1,12 @@
-"""Read-only Tkinter viewer for parsed Chapter 1 circuits."""
+"""Read-only schematic and DC result viewer for parsed circuits."""
 
 import argparse
 import tkinter as tk
 
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
+from .dc import solve_dc
 from .layout import make_layout
 from .parser import parse_file
 
@@ -97,12 +101,65 @@ def draw_circuit(canvas, circuit, layout):
             _draw_placeholder(canvas, element, x, y)
 
 
+def analyze_circuit(circuit):
+    """Solve a parsed circuit and return display-ready DC diagnostics."""
+    return solve_dc(circuit)
+
+
+def solution_plot_data(result):
+    """Return stable node labels and voltages for a result plot."""
+    node_indices = result["node_indices"]
+    nodes = sorted(node_indices, key=node_indices.get)
+    labels = ["0", *[str(node) for node in nodes]]
+    values = [0.0, *[float(result["solution"][node_indices[node]]) for node in nodes]]
+    return labels, values
+
+
+def draw_solution_plot(figure, result):
+    """Draw solved node voltages into a Matplotlib figure."""
+    labels, values = solution_plot_data(result)
+    figure.clear()
+    axes = figure.add_subplot(111)
+    axes.bar(labels, values, color="#1d6973")
+    axes.set_xlabel("Node")
+    axes.set_ylabel("Voltage (V)")
+    axes.set_title("DC operating point")
+    axes.axhline(0.0, color="#283238", linewidth=0.8)
+    figure.tight_layout()
+    return axes
+
+
 def show_circuit(circuit, layout=None):
+    try:
+        result = analyze_circuit(circuit)
+        status = (
+            f"Converged in {result['iterations']} iteration(s); "
+            f"residual norm {result['residual_norm']:.3e}"
+        )
+    except (ValueError, RuntimeError) as error:
+        result = None
+        status = f"DC analysis unavailable: {error}"
+
     window = tk.Tk()
-    window.title("Circuit Simulator - Milestone 1")
-    canvas = tk.Canvas(window, width=760, height=420, background="#f4f1ea")
-    canvas.pack(fill=tk.BOTH, expand=True)
+    window.title("Circuit Simulator - Read-only analysis")
+    window.geometry("1100x620")
+    status_label = tk.Label(window, text=status, anchor="w", padx=10, pady=6)
+    status_label.pack(fill=tk.X)
+    content = tk.Frame(window)
+    content.pack(fill=tk.BOTH, expand=True)
+    canvas = tk.Canvas(content, width=760, height=420, background="#f4f1ea")
+    canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     draw_circuit(canvas, circuit, layout or make_layout(circuit))
+    figure = Figure(figsize=(4.2, 3.8), dpi=100)
+    if result is not None:
+        draw_solution_plot(figure, result)
+    else:
+        axes = figure.add_subplot(111)
+        axes.text(0.5, 0.5, "No DC plot", ha="center", va="center")
+        axes.set_axis_off()
+    plot = FigureCanvasTkAgg(figure, master=content)
+    plot.draw()
+    plot.get_tk_widget().pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
     window.mainloop()
 
 

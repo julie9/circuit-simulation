@@ -1,6 +1,6 @@
 from circuit_sim.layout import make_layout
 from circuit_sim.parser import parse_netlist
-from circuit_sim.viewer import draw_circuit
+from circuit_sim.viewer import draw_circuit, solution_plot_data
 
 
 class RecordingCanvas:
@@ -59,3 +59,16 @@ def test_example_with_meters_draws_meter_faces():
     assert "V" in labels
     assert make_layout(circuit)["elements"]["AM1"]["orientation"] == "horizontal"
     assert make_layout(circuit)["elements"]["VM1"]["orientation"] == "vertical"
+
+
+def test_solution_plot_data_includes_ground_and_ascending_nodes():
+    circuit = parse_netlist("V1 2 0 5\nR1 2 1 1000\nR2 1 0 1000")
+    result = {
+        "node_indices": {1: 0, 2: 1},
+        "solution": [2.5, 5.0],
+    }
+
+    labels, values = solution_plot_data(result)
+
+    assert labels == ["0", "1", "2"]
+    assert values == [0.0, 2.5, 5.0]

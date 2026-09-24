@@ -67,4 +67,13 @@ I1 2 0 0.001
 
 The viewer acceptance criteria are: no input prompt on startup, every element drawn once, visible ground and node labels, correct polarity and arrow direction, no parser mutation, deterministic placement, and no GUI startup during parser tests.
 
-Editing, arbitrary automatic routing, hierarchical circuits, waveform plotting, and simulation controls are deferred.
+The read-only analysis view also attempts DC operating-point analysis through
+`solve_dc`. It displays the convergence iteration count and residual norm, and
+plots node voltages including ground when the circuit contains only DC analysis
+elements (`R`, `V`, `I`, `C`, `L`, and `D`). Meters and three-terminal records
+remain visible as graph placeholders but are reported as unsupported for DC
+analysis. A parser or solver error does not prevent the schematic from being
+shown.
+
+Editing, arbitrary automatic routing, hierarchical circuits, transient
+waveform plotting, and simulation controls are deferred.
