@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install project dependencies",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": [
+                "-m",
+                "pip",
+                "install",
+                "-e",
+                ".[test]"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Run pytest",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": [
+                "-m",
+                "pytest"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run example viewer",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": [
+                "-m",
+                "circuit_sim.viewer",
+                "${workspaceFolder}/examples/first_circuit.net"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

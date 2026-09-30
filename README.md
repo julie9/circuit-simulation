@@ -23,15 +23,36 @@ capacitor, and inductor circuits is now available in `circuit_sim.mna`.
 Capacitors are open circuits and inductors are ideal zero-voltage branches in
 this formulation. Circuit solving remains planned for Milestone 3.
 
-## Run
+## Setup and Run on Windows
 
-From the repository root:
+Open this repository folder in VS Code. The workspace settings use the local
+`.venv` interpreter and configure pytest automatically.
 
-```text
+Run these commands once from the repository root in PowerShell:
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 python -m pip install -e ".[test]"
+```
+
+The install command reads all dependencies from `pyproject.toml`, including
+NumPy and pytest. After installation, use the Testing tab to discover and run
+tests. You can also run them from PowerShell:
+
+```powershell
 python -m pytest
 python -m circuit_sim.viewer examples/first_circuit.net
 ```
+
+VS Code also provides these tasks through `Terminal > Run Task`:
+
+- `Install project dependencies`
+- `Run pytest`
+- `Run example viewer`
+
+If the Testing tab is empty, run `Python: Select Interpreter` from the Command
+Palette and choose `.venv\Scripts\python.exe`, then refresh the tests.
 
 The parser is independent of Tkinter and returns plain dictionaries that
 preserve terminal order and source direction. See
