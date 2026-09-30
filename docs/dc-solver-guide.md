@@ -67,6 +67,25 @@ only from the linearized matrix. This distinction matters: a linearized solve
 can have a tiny algebraic residual while the original diode equation is still
 unsatisfied.
 
+## Included scope and deferred scope
+
+This branch intentionally completes a diode-sized Chapter 4 increment. It
+includes the Shockley device equation, scale factor, guarded exponential,
+companion stamp, damped Newton update, nonlinear residual, nonzero initial
+guesses, and explicit iteration-limit failures.
+
+The following belong in later feature branches rather than being hidden inside
+this first solver:
+
+- a reusable residual/Jacobian Newton API and scaled absolute/relative
+  convergence metrics;
+- BJT Ebers-Moll and piecewise MOSFET equations, region transitions, and
+  terminal-current conservation tests;
+- source stepping, Gmin stepping, and pseudo-transient continuation;
+- temperature, series resistance, breakdown, and production device models;
+- nonlinear capacitors/inductors, charge-based models, and transient coupling;
+- sparse Jacobian assembly and Newton-Krylov or trust-region alternatives.
+
 ## Numerical risks and limitations
 
 - The exponential can overflow, so the model clips its exponent.
@@ -74,6 +93,8 @@ unsatisfied.
   backtracking is used in this increment.
 - A small residual does not establish model accuracy or good conditioning.
 - The default diode parameters are educational constants, not a device library.
+- The current tolerances are absolute scalar tolerances; scaled voltage/current
+  tolerances and richer iteration diagnostics are future work.
 - BJT/MOS models, source stepping, temperature dependence, and continuation
   are future work.
 

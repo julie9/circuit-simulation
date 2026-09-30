@@ -17,6 +17,20 @@ def test_diode_model_returns_current_and_jacobian():
     assert conductance == pytest.approx(1e-14 / 0.02585)
 
 
+def test_diode_model_honors_scale_and_reverse_bias():
+    current, conductance = diode_current_and_conductance(-0.5, scale=2.0)
+
+    assert current == pytest.approx(-2e-14, rel=1e-6)
+    assert conductance > 0.0
+
+
+def test_diode_model_clips_large_exponent_without_overflow():
+    current, conductance = diode_current_and_conductance(100.0)
+
+    assert np.isfinite(current)
+    assert np.isfinite(conductance)
+
+
 def test_diode_linearization_matches_tangent_near_operating_voltage():
     voltage = 0.6
     current, conductance = diode_current_and_conductance(voltage)
@@ -42,6 +56,14 @@ def test_solve_dc_finds_diode_resistor_operating_point():
     assert result["converged"] is True
     assert result["iterations"] < 100
     assert result["solution"][1] == pytest.approx(0.692, abs=0.01)
+    assert result["residual_norm"] < 1e-10
+
+
+def test_solve_dc_accepts_a_nonzero_initial_guess():
+    circuit = parse_netlist("V1 1 0 5\nR1 1 2 1000\nD1 2 0")
+    result = solve_dc(circuit, initial_guess=np.array([5.0, 0.0, 0.0]))
+
+    assert result["converged"] is True
     assert result["residual_norm"] < 1e-10
 
 

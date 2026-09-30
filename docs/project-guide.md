@@ -58,7 +58,9 @@ point solver using Shockley companion models and damped Newton iteration.
 ### Next actions
 
 - Add BJT and MOS device equations and Jacobians.
-- Add nonlinear source stepping and broader convergence diagnostics.
+- Add scaled Newton tolerances, iteration history, and broader convergence
+  diagnostics.
+- Add nonlinear source stepping, then Gmin stepping and pseudo-transient.
 - Complete the full nonlinear DC operating-point milestone.
 
 ### Milestone 2 checklist
