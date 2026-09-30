@@ -157,6 +157,9 @@ Keep production simulator code under `src/` and tests under `tests/`.
 
 ## Supporting documents
 
+- [Book coverage and learning plan](book-coverage-plan.md): implementation
+  status, pedagogical milestones, branch/PR sequence, missing topics, and
+  modern numerical-practice extensions.
 - [Parser and viewer specification](parser-viewer-spec.md): grammar,
   electrical conventions, and drawing requirements.
 - [Dense solver guide](solver-guide.md): Chapter 3 concepts, derivation,
