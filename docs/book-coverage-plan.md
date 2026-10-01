@@ -203,39 +203,119 @@ Only after linear transient analysis is independently verified should dynamic
 elements be combined with diode/BJT/MOSFET Newton models. Add charge-based
 capacitor interfaces before claiming charge conservation.
 
-## Building on this plan: remaining work
+## Future work and missing points from the book
 
-The detailed work belongs in the chapter sections above. This section is only
-the consolidated dependency view, so it does not repeat every task:
+The sections above explain the implementation details. This section is the
+ordered backlog: it records what is still missing, what should build on earlier
+work, and which items are extensions beyond the book's main projects. The
+implementation should continue forward through the existing pipeline:
 
-| Build on | Next capability | Depends on |
-|---|---|---|
-| Chapter 2 completion work | Full topology checks and controlled-source stamps | Stable node/branch/sign conventions |
-| Chapter 3 completion work | Diagnostics, iterative methods, and sparse pathway | Verified dense LU and residuals |
-| Chapter 4 implementation plan | Diode, then BJT/MOSFET, then continuation | Linear MNA, device Jacobians, and Newton tests |
-| Chapter 5 implementation plan | BE/TR transient simulation and adaptive error control | DC initialization and dynamic histories |
-| All chapters | AC, noise, sensitivity, pole-zero, and other analysis modes | A stable DC/transient core |
+```text
+parser -> MNA -> linear solver -> Newton DC -> transient integration
+```
 
-The repository should therefore build forward rather than restart each topic:
-parser records feed MNA, MNA feeds the linear solver, the linear solver feeds
-Newton iteration, and Newton iteration feeds transient time stepping. Each new
-branch should reuse the previous branch's equations, tests, sign conventions,
-and diagnostics.
+Each stage should reuse the preceding stage's equations, tests, sign
+conventions, and diagnostics rather than introducing a parallel implementation.
 
-### Cross-cutting and post-book work
+### Chapter 1: parser and representation
 
-These items do not belong to one chapter or are extensions beyond the book's
-main computer projects:
+- Clarify the supported netlist contract, including the intentional rejection
+  of engineering suffixes such as `1k`, or add suffix parsing as a separate
+  feature.
+- Document that diode, BJT, and MOSFET records can be parsed before their
+  solving models are available.
+- Preserve terminal order, source polarity, current direction, and line-numbered
+  parser errors for every later analysis mode.
+- Add a small netlist validation report for later solvers.
 
-- scaling, condition estimates, growth-factor monitoring, and mixed-precision
-  refinement;
-- charge/flux-conserving multiterminal device models;
-- model libraries, subcircuits, hierarchy, parameter sweeps, and engineering
-  suffixes;
-- modern production methods such as automatic differentiation, sparse
-  Newton-Krylov methods, equilibration, event handling, and parallel assembly;
+### Chapter 2: network equations and MNA
+
+Build on the existing static MNA assembly and topology helpers by adding:
+
+- graph connectivity, self-loop, source-loop, and source-cutset checks where
+  they are well-defined for the supported element set;
+- complete STA, nodal-analysis, cycle-space, bond-space, and network
+  solvability study tools;
+- complete group-1/group-2 stamps for retained currents and grounded sources;
+- VCCS, CCCS, VCVS, and CCVS syntax and stamps when control terminals and
+  control-current conventions are added to the netlist representation;
+- dynamic-stamp documentation kept separate from the current static/DC
+  behavior.
+
+The current capacitor-open and inductor-zero-voltage behavior is valid only for
+static/DC assembly. Transient companion models must not reuse those assumptions
+silently.
+
+### Chapter 3: linear numerical methods
+
+Build on the educational dense LU solver and its residual tests by adding:
+
+- normalized residuals, pivot-size and matrix-scale diagnostics, condition
+  estimates, growth-factor experiments, and mixed-precision refinement;
+- Cholesky and block Gaussian elimination;
+- Gauss-Jacobi, Gauss-Seidel, iterative refinement, convergence guards, and
+  spectral-radius experiments;
+- triplet and compressed-column storage, fill-in demonstrations, and a SciPy
+  sparse reference path;
+- Markowitz pivoting, minimum-degree concepts, COLAMD-like ordering, and
+  circuit-oriented sparse factorization experiments.
+
+The educational implementation should remain separate from the production
+reference path: SciPy/SuiteSparse can validate correctness and performance,
+but should not hide the algorithms being learned.
+
+### Chapter 4: nonlinear DC analysis
+
+Build on the diode companion-model increment by adding:
+
+- a reusable residual/Jacobian Newton interface with scaled absolute and
+  relative tolerances, iteration history, stagnation detection, and distinct
+  failure diagnostics;
+- Ebers-Moll BJT and piecewise quadratic MOSFET models, including region
+  transitions, finite Jacobians, and terminal-current conservation;
+- source stepping, Gmin stepping, and pseudo-transient continuation, each as a
+  separately testable strategy rather than an opaque fallback;
+- temperature dependence, series resistance, breakdown behavior, and richer
+  device models only after the educational models are verified.
+
+Nonlinear capacitors and inductors, charge/flux-based models, and multiterminal
+device coupling belong with Chapter 5 because they require transient state and
+conservation handling.
+
+### Chapter 5: transient analysis
+
+Build on DC initialization and the nonlinear solver by adding:
+
+- capacitor-voltage and inductor-current histories;
+- backward Euler, then trapezoidal-rule companion models for linear RC/RL
+  circuits;
+- BDF2, variable-step methods, LTE/PLTE estimation, smoothing, extrapolation,
+  stiffness experiments, and trapezoidal-ringing demonstrations;
+- step acceptance/rejection, breakpoints, minimum-step failure, waveform
+  output, and reproducible transient fixtures;
+- nonlinear transient coupling and charge/flux-conserving multiterminal device
+  models.
+
+### Beyond the core book projects
+
+After the DC and transient core is stable, add the analysis modes mentioned in
+Chapter 1: AC small-signal, pole-zero, distortion, sensitivity, noise,
+temperature, statistical, and switched-capacitor analysis. Model libraries,
+subcircuits, hierarchy, parameter sweeps, engineering units, and production
+sparse performance are also later extensions.
+
+### Modern production practice
+
+These topics extend beyond the book or connect several chapters:
+
+- automatic differentiation, sparse Newton-Krylov methods, equilibration,
+  event handling, and parallel assembly;
 - property-based and differential testing, reproducible benchmarks, and
-  profiling of assembly, factorization, Newton iterations, and rejected steps.
+  profiling of assembly, factorization, Newton iterations, and rejected steps;
+- robust trust-region or line-search methods alongside circuit-specific
+  Newton iteration;
+- current sparse-DAE and circuit-simulation literature after the core
+  implementation is complete.
 
 ## Modern practice to learn alongside the book
 
