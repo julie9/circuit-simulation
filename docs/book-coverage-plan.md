@@ -203,35 +203,39 @@ Only after linear transient analysis is independently verified should dynamic
 elements be combined with diode/BJT/MOSFET Newton models. Add charge-based
 capacitor interfaces before claiming charge conservation.
 
-## Future work and missing points from the book
+## Building on this plan: remaining work
 
-These topics are either absent from the code or intentionally deferred:
+The detailed work belongs in the chapter sections above. This section is only
+the consolidated dependency view, so it does not repeat every task:
 
-- full controlled-source syntax and stamps, including VCCS, CCCS, VCVS, and
-  CCVS control variables;
-- complete STA, nodal-analysis, cycle-space, bond-space, and topology tools;
-- rigorous network solvability diagnostics beyond basic singular-matrix errors;
-- Cholesky, block GE, Gauss-Jacobi, Gauss-Seidel, and iterative refinement;
-- sparse storage, fill-in prediction, Markowitz pivoting, minimum degree,
-  COLAMD-like ordering, and circuit-oriented sparse factorization;
+| Build on | Next capability | Depends on |
+|---|---|---|
+| Chapter 2 completion work | Full topology checks and controlled-source stamps | Stable node/branch/sign conventions |
+| Chapter 3 completion work | Diagnostics, iterative methods, and sparse pathway | Verified dense LU and residuals |
+| Chapter 4 implementation plan | Diode, then BJT/MOSFET, then continuation | Linear MNA, device Jacobians, and Newton tests |
+| Chapter 5 implementation plan | BE/TR transient simulation and adaptive error control | DC initialization and dynamic histories |
+| All chapters | AC, noise, sensitivity, pole-zero, and other analysis modes | A stable DC/transient core |
+
+The repository should therefore build forward rather than restart each topic:
+parser records feed MNA, MNA feeds the linear solver, the linear solver feeds
+Newton iteration, and Newton iteration feeds transient time stepping. Each new
+branch should reuse the previous branch's equations, tests, sign conventions,
+and diagnostics.
+
+### Cross-cutting and post-book work
+
+These items do not belong to one chapter or are extensions beyond the book's
+main computer projects:
+
 - scaling, condition estimates, growth-factor monitoring, and mixed-precision
   refinement;
-- diode, BJT, and MOSFET nonlinear models and companion stamps;
-- damping, source stepping, Gmin stepping, and pseudo-transient continuation;
-- nonlinear capacitors, nonlinear inductors, charge-based and flux-based
-  models, and charge-conserving multiterminal device models;
-- BE, TR, BDF2, variable-step methods, LTE/PLTE estimation, smoothing,
-  extrapolation, and stiffness experiments;
-- DC initialization of dynamic states and robust transient failure recovery;
-- waveform output, plotting, breakpoints, and reproducible transient fixtures;
-- AC small-signal, pole-zero, distortion, sensitivity, noise, temperature,
-  statistical, and switched-capacitor analyses mentioned in Chapter 1;
-- model libraries, subcircuits, hierarchical netlists, parameter sweeps,
-  units/engineering suffixes, and production-grade sparse performance;
-- modern production concerns not developed in the book: automatic
-  differentiation options, sparse Newton-Krylov methods, scaling/equilibration,
-  event handling, parallel assembly, reproducible benchmarks, and stronger
-  property-based and differential testing.
+- charge/flux-conserving multiterminal device models;
+- model libraries, subcircuits, hierarchy, parameter sweeps, and engineering
+  suffixes;
+- modern production methods such as automatic differentiation, sparse
+  Newton-Krylov methods, equilibration, event handling, and parallel assembly;
+- property-based and differential testing, reproducible benchmarks, and
+  profiling of assembly, factorization, Newton iterations, and rejected steps.
 
 ## Modern practice to learn alongside the book
 
