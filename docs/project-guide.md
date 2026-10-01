@@ -22,6 +22,9 @@ netlist -> parser -> circuit records -> unknown indexing -> MNA assembly
   -> results and plots
 ```
 
+For the complete chapter map, learning sequence, branch plan, and deferred
+book topics, see the [book coverage and learning plan](book-coverage-plan.md).
+
 ## Principles
 
 - Preserve voltage references, current directions, terminal order, MNA
@@ -38,71 +41,22 @@ netlist -> parser -> circuit records -> unknown indexing -> MNA assembly
 
 ## Current status
 
-Milestone 1, netlist parser and viewer, is complete. The project currently
-parses the restricted netlist language, validates records with line-numbered
-errors, preserves terminal and source conventions, and draws a deterministic,
-read-only Tkinter schematic.
+| Milestone | Status | Repository result |
+|---|---|---|
+| 1. Parser and viewer | Complete | Restricted netlist parsing and deterministic read-only Tkinter viewer |
+| 2. Linear MNA assembly | Complete | Dense static assembly for resistors, sources, capacitors, and inductors |
+| 3. Dense linear solver | Complete | Educational LU with partial pivoting, failure detection, and residuals |
+| 4. Nonlinear DC analysis | In progress | Diode companion model and damped Newton operating-point solver |
+| 5. Transient analysis | Planned | Dynamic histories, companion models, and waveform output |
 
-Milestone 2, linear MNA assembly, is complete. Deterministic node and branch
-indexing and dense `np.float64` assembly are implemented for resistors, voltage
-sources, current sources, capacitors, and inductors. In the static/DC
-formulation, capacitors are open circuits and inductors are ideal zero-voltage
-branches with current unknowns. Meters remain display-only and semiconductor
-records are unsupported. The system is assembled but not solved.
+The current implementation is intentionally educational. Capacitors are open
+circuits and inductors are ideal zero-voltage branches only in the static/DC
+formulation. Meters and semiconductor records remain outside the supported
+linear MNA solve unless a later milestone adds their models.
 
-### Next actions
-
-- Define the educational dense solver interface and numerical conventions.
-- Implement forward and backward substitution.
-- Implement dense LU factorization with partial pivoting and diagnostics.
-- Compare solver results against independent references.
-
-### Milestone 2 checklist
-
-- [x] Map non-ground nodes and voltage-source branch currents deterministically.
-- [x] Assemble dense `A` and `b` with the established unknown ordering.
-- [x] Stamp resistors, voltage sources, and current sources.
-- [x] Test matrix values, source direction, sign conventions, and grounded terminals.
-- [x] Reject unsupported element types explicitly.
-- [x] Add stamps for retained linear element groups.
-- [x] Decide whether meters contribute to MNA and define their unknowns.
-- [x] Add capacitor and inductor MNA tests when their stamps exist.
-- [x] Add more hand-assembled matrix comparisons.
-- [x] Verify the complete small-circuit assembly target.
-
-## Roadmap
-
-1. **Netlist parser and viewer:** parse and display a recognizable small
-   circuit. Complete.
-2. **Linear MNA assembly:** add retained linear-element stamps and verify
-  dense `A x = b` systems against hand-assembled references. Complete.
-3. **Linear solver:** implement substitution, dense LU with partial pivoting,
-   singularity detection, residual reporting, and independent comparisons.
-4. **Nonlinear DC analysis:** add device models, Jacobians, Newton iteration,
-   convergence tests, and robustness techniques such as damping or stepping.
-5. **Transient analysis:** add capacitor and inductor histories, companion
-   models, DC initialization, nested iteration, time-step control, and
-   waveform output.
-
-## Working method
-
-For each learning or coding increment:
-
-1. State the objective, prerequisites, and relevant mathematical objects.
-2. Explain the physical meaning, dimensions, units, and sign conventions.
-3. Work a small example by hand and translate it into an algorithm.
-4. Implement the smallest useful code increment.
-5. Add deterministic tests, including a hand-solvable case and failure or
-   edge cases where relevant.
-6. Check residuals and compare with an independent reference when studying a
-   solver.
-7. Record assumptions, limitations, and the next small increment.
-
-Do not advance to the next learning session until the comprehension check is
-answered or continuation is explicitly requested. At the start of each
-chapter, record its purpose and prerequisites, how the sections connect, new
-notation, algorithms or pseudocode, element stamps or companion models,
-numerical risks, project requirements, and proposed short sessions.
+The next implementation slice is defined in the coverage plan rather than in
+this guide. This keeps the repository status current without duplicating the
+book's detailed learning roadmap.
 
 ## Numerical policy
 
@@ -119,20 +73,6 @@ Every solver needs a hand-solvable case, a residual check, an edge or failure
 case, an independent reference comparison where appropriate, and a stated
 tolerance. For `A @ x = b`, calculate `r = b - A @ x` and consider scaling,
 conditioning, singularity, and small pivots.
-
-## Milestone 3: Educational dense linear solver
-
-Milestone 3 is complete. The solver uses dense `np.float64` arrays and
-returns the solution, residual vector, residual norm, and LU factors. The
-factorization uses partial pivoting and reports singular or unusable pivots
-through `np.linalg.LinAlgError`. The educational implementation is compared
-against `np.linalg.solve` as an independent reference.
-
-- [x] Define the solver interface and numerical conventions.
-- [x] Implement forward and backward substitution.
-- [x] Implement dense LU factorization with partial pivoting.
-- [x] Detect singular or unusable pivots.
-- [x] Report residuals and compare against independent reference results.
 
 ## Project boundaries
 
